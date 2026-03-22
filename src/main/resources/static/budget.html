@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Budget Planner</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#1e3c72,#2a5298,#4ca1af);
+background-size:400% 400%;
+animation:bgmove 10s ease infinite;
+padding:20px;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.container{
+width:380px;
+background:white;
+padding:22px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.title{
+text-align:center;
+font-size:22px;
+font-weight:bold;
+margin-bottom:16px;
+color:#1e3c72;
+}
+
+.sectiontitle{
+font-size:15px;
+font-weight:bold;
+margin:12px 0 8px 0;
+color:#333;
+}
+
+.inputbox{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border:none;
+border-radius:10px;
+background:#f2f2f2;
+font-size:14px;
+}
+
+.savebtn{
+width:100%;
+padding:13px;
+border:none;
+border-radius:25px;
+background:linear-gradient(90deg,#11998e,#38ef7d);
+color:white;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+margin-top:5px;
+}
+
+.resultbox{
+margin-top:16px;
+padding:14px;
+border-radius:12px;
+background:#f7f7f7;
+font-size:14px;
+line-height:1.8;
+}
+
+.bottomnav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:18px;
+padding-top:12px;
+border-top:1px solid #ddd;
+text-align:center;
+}
+
+.navitem{
+flex:1;
+font-size:12px;
+color:#555;
+}
+
+.navitem i{
+display:block;
+font-size:18px;
+margin-bottom:4px;
+}
+
+.active{
+color:#11998e;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">Budget & Savings</div>
+
+<form id="budgetForm">
+
+<div class="sectiontitle">Set Budget by Category</div>
+
+<input class="inputbox" type="number" id="foodBudget" placeholder="Food Budget" required>
+<input class="inputbox" type="number" id="transportBudget" placeholder="Transport Budget" required>
+<input class="inputbox" type="number" id="shoppingBudget" placeholder="Shopping Budget" required>
+<input class="inputbox" type="number" id="billsBudget" placeholder="Bills Budget" required>
+
+<div class="sectiontitle">Amount Spent by Category</div>
+
+<input class="inputbox" type="number" id="foodSpent" placeholder="Food Spent" required>
+<input class="inputbox" type="number" id="transportSpent" placeholder="Transport Spent" required>
+<input class="inputbox" type="number" id="shoppingSpent" placeholder="Shopping Spent" required>
+<input class="inputbox" type="number" id="billsSpent" placeholder="Bills Spent" required>
+
+<div class="sectiontitle">Savings Goal</div>
+
+<input class="inputbox" type="number" id="savingsGoal" placeholder="Savings Goal" required>
+
+<button class="savebtn" type="submit">Save Budget</button>
+
+</form>
+
+<div class="resultbox" id="result">
+Food Remaining: --<br>
+Transport Remaining: --<br>
+Shopping Remaining: --<br>
+Bills Remaining: --<br>
+Total Budget: --<br>
+Total Spent: --<br>
+Total Remaining: --
+</div>
+
+<div class="bottomnav">
+
+<div class="navitem">
+<i class="fa-solid fa-house"></i>
+Dashboard
+</div>
+
+<div class="navitem">
+<i class="fa-solid fa-list"></i>
+Transactions
+</div>
+
+<div class="navitem active">
+<i class="fa-solid fa-chart-column"></i>
+Budget
+</div>
+
+<div class="navitem">
+<i class="fa-solid fa-user"></i>
+Profile
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("budgetForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    fetch("/budget/save", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            foodBudget: Number(document.getElementById("foodBudget").value),
+            transportBudget: Number(document.getElementById("transportBudget").value),
+            shoppingBudget: Number(document.getElementById("shoppingBudget").value),
+            billsBudget: Number(document.getElementById("billsBudget").value),
+
+            foodSpent: Number(document.getElementById("foodSpent").value),
+            transportSpent: Number(document.getElementById("transportSpent").value),
+            shoppingSpent: Number(document.getElementById("shoppingSpent").value),
+            billsSpent: Number(document.getElementById("billsSpent").value),
+
+            savingsGoal: Number(document.getElementById("savingsGoal").value)
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("result").innerHTML =
+            "Food Remaining: ₹ " + data.foodRemaining + "<br>" +
+            "Transport Remaining: ₹ " + data.transportRemaining + "<br>" +
+            "Shopping Remaining: ₹ " + data.shoppingRemaining + "<br>" +
+            "Bills Remaining: ₹ " + data.billsRemaining + "<br>" +
+            "Total Budget: ₹ " + data.totalBudget + "<br>" +
+            "Total Spent: ₹ " + data.totalSpent + "<br>" +
+            "Total Remaining: ₹ " + data.totalRemaining;
+    })
+    .catch(error => {
+        document.getElementById("result").innerHTML = "Error while saving budget";
+        console.log(error);
+    });
+});
+
+</script>
+
+</body>
+</html>
