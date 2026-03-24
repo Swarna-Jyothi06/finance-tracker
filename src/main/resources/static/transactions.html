@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 <meta charset="UTF-8">
@@ -21,66 +20,33 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-
-/* Smooth multi color finance gradient */
-
-background: linear-gradient(
-135deg,
-#0f2027,
-#203a43,
-#2c5364,
-#4e4376
-);
-
+background: linear-gradient(135deg,#0f2027,#203a43,#2c5364,#4e4376);
 background-size:400% 400%;
 animation:bgMove 12s ease infinite;
 }
 
-/* background animation */
-
 @keyframes bgMove{
-
-0%{
-background-position:0% 50%;
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 }
-
-50%{
-background-position:100% 50%;
-}
-
-100%{
-background-position:0% 50%;
-}
-
-}
-
-/* Card container */
 
 .container{
-
-width:340px;
+width:360px;
 background:white;
 border-radius:20px;
 padding:22px;
 box-shadow:0 12px 30px rgba(0,0,0,0.2);
-
 }
-
-/* Title */
 
 .title{
-
 text-align:center;
-font-size:20px;
+font-size:22px;
 font-weight:bold;
 margin-bottom:18px;
-
 }
 
-/* Input boxes */
-
 .inputbox{
-
 width:100%;
 padding:12px;
 margin-bottom:12px;
@@ -88,112 +54,92 @@ border-radius:10px;
 border:none;
 background:#f3f3f3;
 font-size:14px;
-
 }
 
-/* Save button */
-
 .savebtn{
-
 width:100%;
 padding:13px;
 border:none;
 border-radius:25px;
-
 background:linear-gradient(90deg,#ff7e5f,#feb47b);
-
 color:white;
 font-size:15px;
 font-weight:bold;
-
 cursor:pointer;
-
 }
 
-/* Bottom Navigation */
-
 .bottomnav{
-
 display:flex;
 justify-content:space-between;
 align-items:center;
-
 margin-top:20px;
 padding-top:12px;
-
 border-top:1px solid #ddd;
-
 text-align:center;
-
 }
 
 .navitem{
-
 flex:1;
 font-size:12px;
 color:#555;
-
 }
 
 .navitem i{
-
 display:block;
 font-size:18px;
 margin-bottom:4px;
-
 }
 
-/* active menu */
-
 .active{
-
 color:#ff7e5f;
 font-weight:bold;
-
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<div class="title">
-Add Transaction
-</div>
+<div class="title">Add Transaction</div>
 
 <form id="transactionForm">
+
+<select class="inputbox" id="type" required>
+<option disabled selected>Type</option>
+<option>Income</option>
+<option>Expense</option>
+</select>
 
 <input class="inputbox" type="number" id="amount" placeholder="Amount" required>
 
 <input class="inputbox" type="text" id="description" placeholder="Description">
 
-<select class="inputbox" id="category">
+<select class="inputbox" id="category" required>
 <option disabled selected>Category</option>
 <option>Food</option>
+<option>Transport</option>
 <option>Shopping</option>
-<option>Travel</option>
 <option>Bills</option>
+<option>Entertainment</option>
+<option>Salary</option>
+<option>Other</option>
 </select>
 
-<select class="inputbox" id="account">
+<select class="inputbox" id="account" required>
 <option disabled selected>Account</option>
 <option>Cash</option>
 <option>Bank</option>
 </select>
 
-<input class="inputbox" type="date" id="date">
+<input class="inputbox" type="date" id="date" required>
 
-<button class="savebtn" type="submit">
-Save
-</button>
+<button class="savebtn" type="submit">Save</button>
 
 </form>
 
 <div class="bottomnav">
-
 <div class="navitem">
 <i class="fa-solid fa-house"></i>
 Dashboard
@@ -213,7 +159,6 @@ Budget
 <i class="fa-solid fa-user"></i>
 Profile
 </div>
-
 </div>
 
 </div>
@@ -226,35 +171,23 @@ document.getElementById("transactionForm")
 e.preventDefault();
 
 fetch("/transactions/add",{
-
 method:"POST",
-
 headers:{
 "Content-Type":"application/json"
 },
-
 body:JSON.stringify({
-
-amount:document.getElementById("amount").value,
-
+type:document.getElementById("type").value,
+amount:Number(document.getElementById("amount").value),
 description:document.getElementById("description").value,
-
 category:document.getElementById("category").value,
-
 account:document.getElementById("account").value,
-
 date:document.getElementById("date").value
-
 })
-
 })
-
 .then(response=>response.json())
-
 .then(data=>{
-
 alert("Transaction Saved Successfully");
-
+document.getElementById("transactionForm").reset();
 });
 
 });

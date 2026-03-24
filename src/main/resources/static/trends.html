@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Financial Trends</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#232526,#414345,#1f4037);
+background-size:400% 400%;
+animation:bgmove 12s ease infinite;
+padding:20px;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.container{
+width:420px;
+background:white;
+padding:22px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.title{
+text-align:center;
+font-size:22px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.card{
+background:#f7f7f7;
+border-radius:14px;
+padding:14px;
+margin-bottom:16px;
+}
+
+.card h3{
+margin:0 0 8px 0;
+font-size:16px;
+}
+
+.summary{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:10px;
+margin-bottom:16px;
+}
+
+.summarybox{
+background:#f7f7f7;
+padding:12px;
+border-radius:12px;
+text-align:center;
+}
+
+.summarybox h4{
+margin:0;
+font-size:13px;
+color:#555;
+}
+
+.summarybox p{
+margin:6px 0 0 0;
+font-size:16px;
+font-weight:bold;
+}
+
+.bottomnav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:18px;
+padding-top:12px;
+border-top:1px solid #ddd;
+text-align:center;
+}
+
+.navitem{
+flex:1;
+font-size:12px;
+color:#555;
+}
+
+.navitem i{
+display:block;
+font-size:18px;
+margin-bottom:4px;
+}
+
+.active{
+color:#11998e;
+font-weight:bold;
+}
+
+canvas{
+max-width:100%;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">Trends</div>
+
+<div class="summary">
+    <div class="summarybox">
+        <h4>Total Income</h4>
+        <p id="incomeValue">₹0</p>
+    </div>
+    <div class="summarybox">
+        <h4>Total Expense</h4>
+        <p id="expenseValue">₹0</p>
+    </div>
+    <div class="summarybox">
+        <h4>Balance</h4>
+        <p id="balanceValue">₹0</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Monthly Spending</h3>
+    <canvas id="lineChart"></canvas>
+</div>
+
+<div class="card">
+    <h3>Spending Breakdown</h3>
+    <canvas id="pieChart"></canvas>
+</div>
+
+<div class="card">
+    <h3>Income vs Expense</h3>
+    <canvas id="barChart"></canvas>
+</div>
+
+<div class="bottomnav">
+<div class="navitem">
+<i class="fa-solid fa-house"></i>
+Dashboard
+</div>
+
+<div class="navitem">
+<i class="fa-solid fa-list"></i>
+Transactions
+</div>
+
+<div class="navitem">
+<i class="fa-solid fa-chart-column"></i>
+Budget
+</div>
+
+<div class="navitem active">
+<i class="fa-solid fa-chart-line"></i>
+Trends
+</div>
+</div>
+
+</div>
+
+<script>
+
+async function loadSummary() {
+    const response = await fetch("/trends/summary");
+    const data = await response.json();
+
+    document.getElementById("incomeValue").innerText = "₹" + data.totalIncome;
+    document.getElementById("expenseValue").innerText = "₹" + data.totalExpense;
+    document.getElementById("balanceValue").innerText = "₹" + data.balance;
+}
+
+async function loadLineChart() {
+    const response = await fetch("/trends/monthly-expense");
+    const data = await response.json();
+
+    const labels = Object.keys(data);
+    const values = Object.values(data);
+
+    new Chart(document.getElementById("lineChart"), {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Monthly Expense",
+                data: values,
+                borderColor: "#c9a24a",
+                backgroundColor: "rgba(201,162,74,0.2)",
+                tension: 0.4,
+                fill: true
+            }]
+        }
+    });
+}
+
+async function loadPieChart() {
+    const response = await fetch("/trends/category");
+    const data = await response.json();
+
+    new Chart(document.getElementById("pieChart"), {
+        type: "pie",
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                data: Object.values(data),
+                backgroundColor: [
+                    "#ff6384",
+                    "#36a2eb",
+                    "#ffcd56",
+                    "#4bc0c0",
+                    "#9966ff",
+                    "#ff9f40"
+                ]
+            }]
+        }
+    });
+}
+
+async function loadBarChart() {
+    const response = await fetch("/trends/income-expense");
+    const data = await response.json();
+
+    new Chart(document.getElementById("barChart"), {
+        type: "bar",
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: "Amount",
+                data: data.values,
+                backgroundColor: ["#36a2eb", "#ff6384"]
+            }]
+        }
+    });
+}
+
+loadSummary();
+loadLineChart();
+loadPieChart();
+loadBarChart();
+
+</script>
+
+</body>
+</html>

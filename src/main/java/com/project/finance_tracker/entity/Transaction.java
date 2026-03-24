@@ -18,6 +18,8 @@ public class Transaction {
 
     private String account;
 
+    private String type;   // Income or Expense
+
     private LocalDate date;
 
     public Transaction() {}
@@ -56,6 +58,14 @@ public class Transaction {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public LocalDate getDate() {
