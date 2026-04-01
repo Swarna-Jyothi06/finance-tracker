@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Community Forum</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#232526,#414345,#1f1c2c);
+background-size:400% 400%;
+animation:bgmove 12s ease infinite;
+padding:20px;
+flex-direction:column;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.container{
+width:420px;
+background:white;
+padding:22px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.title{
+text-align:center;
+font-size:22px;
+font-weight:bold;
+margin-bottom:16px;
+color:#232526;
+}
+
+.inputbox, textarea{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border:none;
+border-radius:10px;
+background:#f2f2f2;
+font-size:14px;
+font-family:Arial, sans-serif;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:25px;
+background:linear-gradient(90deg,#fc466b,#3f5efb);
+color:white;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+margin-bottom:12px;
+}
+
+.postcard{
+background:#f8f8f8;
+padding:12px;
+border-radius:12px;
+margin-top:10px;
+}
+
+.smallbtn{
+width:auto;
+padding:8px 14px;
+border-radius:18px;
+font-size:13px;
+margin-top:8px;
+margin-right:6px;
+}
+
+.bottomnav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:18px;
+padding-top:12px;
+border-top:1px solid #ddd;
+text-align:center;
+}
+
+.navitem{
+flex:1;
+font-size:12px;
+color:#555;
+}
+
+.navitem i{
+display:block;
+font-size:18px;
+margin-bottom:4px;
+}
+
+.active{
+color:#3f5efb;
+font-weight:bold;
+}
+
+.backbtn{
+display:block;
+margin:15px auto 0;
+padding:10px 18px;
+border-radius:25px;
+background:linear-gradient(90deg,#36d1dc,#5b86e5);
+color:white;
+text-decoration:none;
+font-size:14px;
+font-weight:bold;
+width:fit-content;
+transition:0.3s;
+}
+
+.backbtn:hover{
+opacity:0.9;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">Community Forum</div>
+
+<input class="inputbox" type="number" id="userId" placeholder="User ID">
+<input class="inputbox" type="text" id="username" placeholder="Username">
+<input class="inputbox" type="text" id="title" placeholder="Post Title">
+<textarea rows="4" id="content" placeholder="Write your post content here..."></textarea>
+
+<button onclick="createPost()">Create Post</button>
+
+<div id="postsArea"></div>
+
+<div class="bottomnav">
+    <div class="navitem">
+        <i class="fa-solid fa-house"></i>
+        Dashboard
+    </div>
+    <div class="navitem">
+        <i class="fa-solid fa-list"></i>
+        Transactions
+    </div>
+    <div class="navitem">
+        <i class="fa-solid fa-chart-column"></i>
+        Budget
+    </div>
+    <div class="navitem active">
+        <i class="fa-solid fa-users"></i>
+        Forum
+    </div>
+</div>
+
+</div>
+
+<a class="backbtn" href="dashboard.html">← Back to Dashboard</a>
+
+<script>
+function createPost() {
+    fetch("/forum/post", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            userId: Number(document.getElementById("userId").value),
+            username: document.getElementById("username").value,
+            title: document.getElementById("title").value,
+            content: document.getElementById("content").value
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Post created successfully");
+        loadPosts();
+    });
+}
+
+function addLike(postId) {
+    fetch("/forum/like", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            postId: postId,
+            userId: 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        loadPosts();
+    });
+}
+
+function addComment(postId) {
+    const commentText = prompt("Enter your comment:");
+    if (!commentText) return;
+
+    fetch("/forum/comment", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            postId: postId,
+            userId: 1,
+            username: "User1",
+            commentText: commentText
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        loadPosts();
+    });
+}
+
+function loadPosts() {
+    fetch("/forum/posts")
+    .then(response => response.json())
+    .then(posts => {
+        const area = document.getElementById("postsArea");
+        area.innerHTML = "";
+
+        posts.reverse().forEach(post => {
+            fetch("/forum/details/" + post.id)
+            .then(response => response.json())
+            .then(details => {
+                let commentsHtml = "";
+                if (details.comments) {
+                    details.comments.forEach(c => {
+                        commentsHtml += "<div style='font-size:13px;margin-top:4px;'>💬 <b>" + c.username + ":</b> " + c.commentText + "</div>";
+                    });
+                }
+
+                area.innerHTML += `
+                    <div class="postcard">
+                        <h3>${post.title}</h3>
+                        <p><b>${post.username}</b></p>
+                        <p>${post.content}</p>
+                        <p>❤️ Likes: ${details.likes}</p>
+                        <button class="smallbtn" onclick="addLike(${post.id})">Like</button>
+                        <button class="smallbtn" onclick="addComment(${post.id})">Comment</button>
+                        <div>${commentsHtml}</div>
+                    </div>
+                `;
+            });
+        });
+    });
+}
+
+loadPosts();
+</script>
+
+</body>
+</html>

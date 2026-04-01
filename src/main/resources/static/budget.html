@@ -8,7 +8,6 @@
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-
 *{
 box-sizing:border-box;
 }
@@ -24,6 +23,7 @@ background:linear-gradient(135deg,#1e3c72,#2a5298,#4ca1af);
 background-size:400% 400%;
 animation:bgmove 10s ease infinite;
 padding:20px;
+flex-direction:column;
 }
 
 @keyframes bgmove{
@@ -101,6 +101,11 @@ text-align:center;
 flex:1;
 font-size:12px;
 color:#555;
+text-decoration:none;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
 }
 
 .navitem i{
@@ -109,11 +114,28 @@ font-size:18px;
 margin-bottom:4px;
 }
 
-.active{
+.navitem.active{
 color:#11998e;
 font-weight:bold;
 }
 
+.backbtn{
+display:block;
+margin:15px auto 0;
+padding:10px 18px;
+border-radius:25px;
+background:linear-gradient(90deg,#36d1dc,#5b86e5);
+color:white;
+text-decoration:none;
+font-size:14px;
+font-weight:bold;
+width:fit-content;
+transition:0.3s;
+}
+
+.backbtn:hover{
+opacity:0.9;
+}
 </style>
 </head>
 
@@ -159,31 +181,70 @@ Total Remaining: --
 
 <div class="bottomnav">
 
-<div class="navitem">
-<i class="fa-solid fa-house"></i>
-Dashboard
-</div>
+    <a class="navitem" href="dashboard.html">
+        <i class="fa-solid fa-house"></i>
+        Dashboard
+    </a>
 
-<div class="navitem">
-<i class="fa-solid fa-list"></i>
-Transactions
-</div>
+    <a class="navitem" href="transactions.html">
+        <i class="fa-solid fa-list"></i>
+        Transactions
+    </a>
 
-<div class="navitem active">
-<i class="fa-solid fa-chart-column"></i>
-Budget
-</div>
+    <a class="navitem active" href="budget.html">
+        <i class="fa-solid fa-chart-column"></i>
+        Budget
+    </a>
 
-<div class="navitem">
-<i class="fa-solid fa-user"></i>
-Profile
-</div>
-
-</div>
+    <a class="navitem" href="trends.html">
+        <i class="fa-solid fa-chart-line"></i>
+        Trends
+    </a>
 
 </div>
+
+</div>
+
+<a class="backbtn" href="dashboard.html">← Back to Dashboard</a>
 
 <script>
+function fillBudgetForm(data){
+    if(!data) return;
+
+    document.getElementById("foodBudget").value = data.foodBudget ?? "";
+    document.getElementById("transportBudget").value = data.transportBudget ?? "";
+    document.getElementById("shoppingBudget").value = data.shoppingBudget ?? "";
+    document.getElementById("billsBudget").value = data.billsBudget ?? "";
+
+    document.getElementById("foodSpent").value = data.foodSpent ?? "";
+    document.getElementById("transportSpent").value = data.transportSpent ?? "";
+    document.getElementById("shoppingSpent").value = data.shoppingSpent ?? "";
+    document.getElementById("billsSpent").value = data.billsSpent ?? "";
+
+    document.getElementById("savingsGoal").value = data.savingsGoal ?? "";
+
+    document.getElementById("result").innerHTML =
+        "Food Remaining: ₹ " + (data.foodRemaining ?? 0) + "<br>" +
+        "Transport Remaining: ₹ " + (data.transportRemaining ?? 0) + "<br>" +
+        "Shopping Remaining: ₹ " + (data.shoppingRemaining ?? 0) + "<br>" +
+        "Bills Remaining: ₹ " + (data.billsRemaining ?? 0) + "<br>" +
+        "Total Budget: ₹ " + (data.totalBudget ?? 0) + "<br>" +
+        "Total Spent: ₹ " + (data.totalSpent ?? 0) + "<br>" +
+        "Total Remaining: ₹ " + (data.totalRemaining ?? 0);
+}
+
+function loadLatestBudget(){
+    fetch("/budget/latest")
+    .then(response => response.json())
+    .then(data => {
+        if(data){
+            fillBudgetForm(data);
+        }
+    })
+    .catch(error => {
+        console.log("No previous budget found");
+    });
+}
 
 document.getElementById("budgetForm").addEventListener("submit", function(e){
     e.preventDefault();
@@ -209,14 +270,8 @@ document.getElementById("budgetForm").addEventListener("submit", function(e){
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById("result").innerHTML =
-            "Food Remaining: ₹ " + data.foodRemaining + "<br>" +
-            "Transport Remaining: ₹ " + data.transportRemaining + "<br>" +
-            "Shopping Remaining: ₹ " + data.shoppingRemaining + "<br>" +
-            "Bills Remaining: ₹ " + data.billsRemaining + "<br>" +
-            "Total Budget: ₹ " + data.totalBudget + "<br>" +
-            "Total Spent: ₹ " + data.totalSpent + "<br>" +
-            "Total Remaining: ₹ " + data.totalRemaining;
+        fillBudgetForm(data);
+        alert("Budget Saved Successfully");
     })
     .catch(error => {
         document.getElementById("result").innerHTML = "Error while saving budget";
@@ -224,6 +279,7 @@ document.getElementById("budgetForm").addEventListener("submit", function(e){
     });
 });
 
+loadLatestBudget();
 </script>
 
 </body>

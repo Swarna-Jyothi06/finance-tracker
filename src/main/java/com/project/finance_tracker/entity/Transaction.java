@@ -10,6 +10,8 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
+
     private double amount;
 
     private String description;
@@ -18,7 +20,7 @@ public class Transaction {
 
     private String account;
 
-    private String type;   // Income or Expense
+    private String type;
 
     private LocalDate date;
 
@@ -26,6 +28,14 @@ public class Transaction {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public double getAmount() {

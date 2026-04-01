@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>BudgetWise AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+min-height:100vh;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364,#4e4376);
+background-size:400% 400%;
+animation:bgmove 12s ease infinite;
+color:white;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 40px;
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+}
+
+.navlinks a{
+text-decoration:none;
+color:white;
+margin-left:12px;
+padding:10px 16px;
+border-radius:20px;
+background:rgba(255,255,255,0.15);
+font-weight:bold;
+}
+
+.hero{
+max-width:1200px;
+margin:40px auto;
+padding:20px 40px;
+display:grid;
+grid-template-columns:1.2fr 1fr;
+gap:30px;
+align-items:center;
+}
+
+.herotext h1{
+font-size:52px;
+margin:0;
+line-height:1.2;
+}
+
+.herotext p{
+font-size:18px;
+line-height:1.8;
+opacity:0.95;
+margin-top:18px;
+}
+
+.buttons{
+margin-top:25px;
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.buttons a{
+text-decoration:none;
+padding:14px 24px;
+border-radius:28px;
+font-weight:bold;
+font-size:16px;
+}
+
+.signup{
+background:white;
+color:#203a43;
+}
+
+.login{
+background:linear-gradient(90deg,#36d1dc,#5b86e5);
+color:white;
+}
+
+.heroCard{
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(10px);
+padding:28px;
+border-radius:24px;
+box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+.heroCard h3{
+margin-top:0;
+font-size:26px;
+}
+
+.feature{
+display:flex;
+align-items:flex-start;
+gap:14px;
+margin:18px 0;
+}
+
+.feature i{
+font-size:22px;
+margin-top:4px;
+}
+
+.feature div{
+font-size:15px;
+line-height:1.6;
+}
+
+.footer{
+text-align:center;
+padding:20px;
+opacity:0.85;
+font-size:14px;
+}
+
+@media(max-width:900px){
+.hero{
+grid-template-columns:1fr;
+}
+.herotext h1{
+font-size:38px;
+}
+.navbar{
+padding:18px 20px;
+}
+.hero{
+padding:20px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <div class="logo">BudgetWise AI</div>
+    <div class="navlinks">
+        <a href="signup.html">Sign Up</a>
+        <a href="login.html">Login</a>
+    </div>
+</div>
+
+<div class="hero">
+
+    <div class="herotext">
+        <h1>Track smarter.<br>Budget better.<br>Grow financially.</h1>
+        <p>
+            BudgetWise AI is a smart personal finance tracker that helps users manage
+            transactions, plan category-wise budgets, view financial trends,
+            export reports, and interact through a community forum.
+        </p>
+
+        <div class="buttons">
+            <a class="signup" href="signup.html">Create Account</a>
+            <a class="login" href="login.html">Login to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="heroCard">
+        <h3>Your All-in-One Finance App</h3>
+
+        <div class="feature">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+            <div><b>Transactions</b><br>Add income and expense details with category, account, and date.</div>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-wallet"></i>
+            <div><b>Budget Planner</b><br>Set category budgets and monitor remaining balance.</div>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-chart-line"></i>
+            <div><b>Financial Trends</b><br>Analyze data using line, pie, and bar charts.</div>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-file-export"></i>
+            <div><b>Export Reports</b><br>Download transaction history as CSV reports.</div>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-users"></i>
+            <div><b>Community Forum</b><br>Create posts, comment, and engage with users.</div>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    BudgetWise AI • Smart Personal Finance Management System
+</div>
+
+</body>
+</html>

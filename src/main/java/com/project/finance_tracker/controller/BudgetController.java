@@ -47,4 +47,13 @@ public class BudgetController {
     public List<Budget> getAllBudgets() {
         return budgetRepository.findAll();
     }
+
+    @GetMapping("/latest")
+    public Budget getLatestBudget() {
+        List<Budget> budgets = budgetRepository.findAll();
+        if (budgets.isEmpty()) {
+            return null;
+        }
+        return budgets.get(budgets.size() - 1);
+    }
 }

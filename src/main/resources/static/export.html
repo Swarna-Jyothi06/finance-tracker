@@ -100,11 +100,6 @@ text-align:center;
 flex:1;
 font-size:12px;
 color:#555;
-text-decoration:none;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
 }
 
 .navitem i{
@@ -113,7 +108,7 @@ font-size:18px;
 margin-bottom:4px;
 }
 
-.navitem.active{
+.active{
 color:#11998e;
 font-weight:bold;
 }
@@ -179,27 +174,25 @@ opacity:0.9;
 </div>
 
 <div class="bottomnav">
+<div class="navitem">
+<i class="fa-solid fa-house"></i>
+Dashboard
+</div>
 
-    <a class="navitem" href="dashboard.html">
-        <i class="fa-solid fa-house"></i>
-        Dashboard
-    </a>
+<div class="navitem">
+<i class="fa-solid fa-list"></i>
+Transactions
+</div>
 
-    <a class="navitem" href="transactions.html">
-        <i class="fa-solid fa-list"></i>
-        Transactions
-    </a>
+<div class="navitem">
+<i class="fa-solid fa-chart-column"></i>
+Budget
+</div>
 
-    <a class="navitem" href="budget.html">
-        <i class="fa-solid fa-chart-column"></i>
-        Budget
-    </a>
-
-    <a class="navitem active" href="trends.html">
-        <i class="fa-solid fa-chart-line"></i>
-        Trends
-    </a>
-
+<div class="navitem active">
+<i class="fa-solid fa-chart-line"></i>
+Trends
+</div>
 </div>
 
 </div>
@@ -207,17 +200,13 @@ opacity:0.9;
 <a class="backbtn" href="dashboard.html">← Back to Dashboard</a>
 
 <script>
-let lineChartInstance = null;
-let pieChartInstance = null;
-let barChartInstance = null;
-
 async function loadSummary() {
     const response = await fetch("/trends/summary");
     const data = await response.json();
 
-    document.getElementById("incomeValue").innerText = "₹" + Number(data.totalIncome || 0).toFixed(2);
-    document.getElementById("expenseValue").innerText = "₹" + Number(data.totalExpense || 0).toFixed(2);
-    document.getElementById("balanceValue").innerText = "₹" + Number(data.balance || 0).toFixed(2);
+    document.getElementById("incomeValue").innerText = "₹" + data.totalIncome;
+    document.getElementById("expenseValue").innerText = "₹" + data.totalExpense;
+    document.getElementById("balanceValue").innerText = "₹" + data.balance;
 }
 
 async function loadLineChart() {
@@ -227,11 +216,7 @@ async function loadLineChart() {
     const labels = Object.keys(data);
     const values = Object.values(data);
 
-    if(lineChartInstance){
-        lineChartInstance.destroy();
-    }
-
-    lineChartInstance = new Chart(document.getElementById("lineChart"), {
+    new Chart(document.getElementById("lineChart"), {
         type: "line",
         data: {
             labels: labels,
@@ -243,10 +228,6 @@ async function loadLineChart() {
                 tension: 0.4,
                 fill: true
             }]
-        },
-        options:{
-            responsive:true,
-            maintainAspectRatio:true
         }
     });
 }
@@ -255,11 +236,7 @@ async function loadPieChart() {
     const response = await fetch("/trends/category");
     const data = await response.json();
 
-    if(pieChartInstance){
-        pieChartInstance.destroy();
-    }
-
-    pieChartInstance = new Chart(document.getElementById("pieChart"), {
+    new Chart(document.getElementById("pieChart"), {
         type: "pie",
         data: {
             labels: Object.keys(data),
@@ -274,10 +251,6 @@ async function loadPieChart() {
                     "#ff9f40"
                 ]
             }]
-        },
-        options:{
-            responsive:true,
-            maintainAspectRatio:true
         }
     });
 }
@@ -286,35 +259,23 @@ async function loadBarChart() {
     const response = await fetch("/trends/income-expense");
     const data = await response.json();
 
-    if(barChartInstance){
-        barChartInstance.destroy();
-    }
-
-    barChartInstance = new Chart(document.getElementById("barChart"), {
+    new Chart(document.getElementById("barChart"), {
         type: "bar",
         data: {
-            labels: data.labels || [],
+            labels: data.labels,
             datasets: [{
                 label: "Amount",
-                data: data.values || [],
+                data: data.values,
                 backgroundColor: ["#36a2eb", "#ff6384"]
             }]
-        },
-        options:{
-            responsive:true,
-            maintainAspectRatio:true
         }
     });
 }
 
-async function initTrends(){
-    await loadSummary();
-    await loadLineChart();
-    await loadPieChart();
-    await loadBarChart();
-}
-
-initTrends();
+loadSummary();
+loadLineChart();
+loadPieChart();
+loadBarChart();
 </script>
 
 </body>

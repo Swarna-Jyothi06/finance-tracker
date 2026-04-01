@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Finance Tracker - Sign Up</title>
 
 <style>
+*{
+box-sizing:border-box;
+}
 
 body{
-font-family: Arial, sans-serif;
-background: linear-gradient(135deg,#ff9a9e,#fad0c4,#fbc2eb,#a6c1ee);
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#ff9a9e,#fad0c4,#fbc2eb,#a6c1ee);
 height:100vh;
 display:flex;
 justify-content:center;
@@ -18,22 +22,24 @@ margin:0;
 .container{
 background:white;
 padding:35px;
-border-radius:12px;
-box-shadow:0 8px 25px rgba(0,0,0,0.2);
-width:320px;
+border-radius:16px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+width:340px;
 text-align:center;
 }
 
 h2{
 margin-bottom:20px;
+color:#222;
 }
 
 input{
-width:90%;
-padding:10px;
-margin:8px 0;
-border-radius:6px;
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
 border:1px solid #ccc;
+font-size:14px;
 }
 
 button{
@@ -42,17 +48,32 @@ padding:12px;
 background:#ff758c;
 color:white;
 border:none;
-border-radius:6px;
+border-radius:8px;
 font-size:16px;
 cursor:pointer;
+font-weight:bold;
+}
+
+button:hover{
+opacity:0.9;
+}
+
+.link{
+margin-top:12px;
+font-size:14px;
+}
+
+.link a{
+color:#ff5e78;
+text-decoration:none;
+font-weight:bold;
 }
 
 #result{
 margin-top:10px;
-color:green;
 font-weight:bold;
+color:green;
 }
-
 </style>
 
 </head>
@@ -64,33 +85,30 @@ font-weight:bold;
 <h2>Sign Up</h2>
 
 <form id="signupForm">
-
 <input type="text" id="name" placeholder="Full Name" required>
-
 <input type="email" id="email" placeholder="Email" required>
-
 <input type="password" id="password" placeholder="Password" required>
-
 <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-
 <input type="number" id="income" placeholder="Income">
-
 <input type="number" id="savings" placeholder="Savings Target">
-
 <button type="submit">Sign Up</button>
-
 </form>
 
 <p id="result"></p>
 
-<p>Already have an account? <a href="login.html">Login</a></p>
+<div class="link">
+Already have an account?
+<a href="login.html">Login</a>
+</div>
+
+<div class="link">
+<a href="index.html">Back to Home</a>
+</div>
 
 </div>
 
 <script>
-
 document.getElementById("signupForm").addEventListener("submit", function(e){
-
 e.preventDefault();
 
 let password=document.getElementById("password").value;
@@ -102,32 +120,26 @@ return;
 }
 
 fetch("/users/register",{
-
 method:"POST",
-
 headers:{
 "Content-Type":"application/json"
 },
-
 body:JSON.stringify({
-
 name:document.getElementById("name").value,
 email:document.getElementById("email").value,
 password:password,
 income:document.getElementById("income").value,
 savingsTarget:document.getElementById("savings").value
-
 })
-
 })
-
 .then(response=>response.json())
 .then(data=>{
 document.getElementById("result").innerText="User Registered Successfully";
+setTimeout(() => {
+window.location.href = "login.html";
+}, 1000);
 });
-
 });
-
 </script>
 
 </body>

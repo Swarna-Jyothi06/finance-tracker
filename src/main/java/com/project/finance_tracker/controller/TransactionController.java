@@ -26,6 +26,11 @@ public class TransactionController {
         return transactionRepository.findAll();
     }
 
+    @GetMapping("/user/{userId}")
+    public List<Transaction> getTransactionsByUser(@PathVariable Long userId) {
+        return transactionRepository.findByUserId(userId);
+    }
+
     @DeleteMapping("/delete/{id}")
     public String deleteTransaction(@PathVariable Long id) {
         transactionRepository.deleteById(id);

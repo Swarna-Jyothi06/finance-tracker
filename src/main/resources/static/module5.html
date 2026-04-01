@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Module 5 - Export & Forum</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#232526,#414345,#1f4037);
+background-size:400% 400%;
+animation:bgmove 12s ease infinite;
+padding:20px;
+color:white;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.container{
+width:430px;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(10px);
+padding:28px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+h1{
+margin-top:0;
+font-size:28px;
+}
+
+p{
+font-size:15px;
+line-height:1.7;
+opacity:0.95;
+}
+
+.buttons{
+margin-top:24px;
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+a{
+display:block;
+padding:14px;
+border-radius:25px;
+background:white;
+color:#1f4037;
+text-decoration:none;
+font-weight:bold;
+font-size:16px;
+}
+
+a:hover{
+opacity:0.9;
+}
+
+.back{
+margin-top:20px;
+display:inline-block;
+background:transparent;
+border:1px solid white;
+color:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Module 5</h1>
+<p>Export user transaction details in CSV format and access the community forum with posts, comments, and likes.</p>
+
+<div class="buttons">
+    <a href="export.html"><i class="fa-solid fa-file-csv"></i> Open Export Module</a>
+    <a href="forum.html"><i class="fa-solid fa-users"></i> Open Community Forum</a>
+</div>
+
+<a class="back" href="dashboard.html"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+
+</div>
+
+</body>
+</html>
